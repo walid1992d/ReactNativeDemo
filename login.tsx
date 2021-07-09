@@ -4,9 +4,10 @@ import { loadingContext } from './contexts/loadingContext';
 import { userContext } from './contexts/userContext';
 import { login } from './services/httpservice';
 import { styles } from './styles';
-import React from "react";
+import React, { useContext, useState } from "react";
 
 export default function Login() {
+    const [formData, setFormData] = useState({email: '', password: ''});
     return (
 
         <userContext.Consumer>
@@ -16,14 +17,20 @@ export default function Login() {
                 {({loading, setLoading}) =>
                 ( 
                     <View>
-                    <Text >Email</Text>
-                    <TextInput style={styles.input}  ></TextInput>
-                    <Text >Password</Text>
-                    <TextInput style={styles.input} ></TextInput>
-            
+                    <Text  >Email: {formData.email} </Text>
+                    <TextInput style={styles.input} onChangeText={(text )=> {
+                        
+                        setFormData({...formData, email: text});
+
+                    }} ></TextInput>
+                    <Text >Password: {formData.password}</Text>
+                    <TextInput style={styles.input} onChangeText={(text )=> {
+                        setFormData({...formData, password: text});
+
+                    }} ></TextInput>            
                     <Button onPress={async () => { 
                       setLoading(true);
-                      const userData = await login("","");
+                      const userData = await login(formData.email, formData.password);
                       setUser(userData) 
             
                     }} title="Login"></Button>
